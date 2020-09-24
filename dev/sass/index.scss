@@ -1,0 +1,96 @@
+// $pokemon_types: 'grass', 'fire', 'water','bug','normal','poison','electric','ground','fairy','fighting','psychic','rock','ghost','ice','dragon';
+$pokemon_types_colors: ('grass':#78c850, 'fire':#F08030, 'water':#6890F0,'bug':#A8B820,'normal':#A8A878,'poison':#A040A0,'electric':#F8D030,'ground':#E0C068,'fairy':#EE99AC,'fighting':#C03028,'psychic':#F85888,'rock':#B8A038,'ghost':#705898,'ice':#98D8D8,'dragon':#7038F8);
+$text_main_color: #000;
+$border_main_color: #000;
+/* $type_grass_color: #78c850;
+$type_fire_color: #F08030;
+$type_water_color: #6890F0;
+$type_bug_color: #A8B820;
+$type_normal_color: #A8A878;
+$type_poison_color: #A040A0;
+$type_electric_color: #F8D030;
+$type_ground_color: #E0C068;
+$type_fairy_color: #EE99AC;
+$type_fighting_color: #C03028;
+$type_psychic_color: #F85888;
+$type_rock_color: #B8A038;
+$type_ghost_color: #705898;
+$type_ice_color: #98D8D8;
+$type_dragon_color: #7038F8; // No Charizard */
+
+body {
+    font-size: 16px;
+}
+
+#main_header {
+    text-align: center;
+    font-size: 32px;
+}
+
+#pokemons_container {
+    text-align: center;
+}
+
+.pokemon_item {
+    display: inline-block;
+    width: 12%;
+    border-radius: 0.5em;
+    border: 1px solid #000;
+    margin: 0.5em;
+    padding: 5px;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+
+    &:visited {
+        color: black;
+    }
+
+    &__image {
+        padding-top: 3px;
+        width: 50%;
+    }
+
+    &__header {
+        border-bottom: 1px solid #000;
+        padding-bottom: 5px;
+
+        &__id {
+            border-radius: 40%;
+            padding: 2px;
+            border: 1px solid #000;
+        }
+
+        &__name {
+            text-transform: uppercase;
+        }
+    }
+}
+
+#pokemon_container {
+    &__image_container {
+        text-align: center;
+
+        @each $type, $color in $pokemon_types_colors {
+            &.bgtype_#{$type} {
+                background-color: $color;
+            }
+        }
+    }
+
+    &__image {
+        width:20%;
+    }
+
+    &__data {
+
+    }
+
+    &__name {
+
+    }
+}
+
+.pokemon_container__type {
+
+}
