@@ -1,5 +1,6 @@
 const apiBaseUrl = 'https://pokeapi.co/api/v2/pokemon/';
 const pokemonImageBaseUrl = 'https://pokeres.bastionbot.org/images/pokemon/';
+const pokemonSpriteBaseUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png';
 
 window.onload = load;
 
@@ -105,5 +106,25 @@ function drawPokemonInfo(pokemon) {
                                             <p>${typesSpan}</p>
                                             <p id="pokemon_container__description">${pokemon.description}</p>
                                         </section>`;
+        let nextPokemonId = pokemon.id + 1;
+        let previousPokemonId = pokemon.id - 1;
+        if (nextPokemonId <= 150) {
+            let nextPokemon = localStorage.getItem(nextPokemonId);
+            let nextMenuItem = document.getElementById('next_pokemon');
+            nextMenuItem.innerHTML = `<a class="nav_menu__list__item__link" href="./pokemon.html?id=${nextPokemonId}">
+                                            <span>${nextPokemonId} - ${nextPokemon.name}</span>
+                                            <img src="${pokemonSpriteBaseUrl}${nextPokemonId}.png" alt="Sprite de ${nextPokemon.name}">
+                                        </a>`;
+        }
+
+        if (previousPokemonId >= 1) {
+            let previousPokemon = localStorage.getItem(previousPokemonId);
+            let previousMenuItem = document.getElementById('previous_pokemon');
+            previousMenuItem.innerHTML = `<a class="nav_menu__list__item__link" href="./pokemon.html?id=${previousPokemonId}">
+                                            <span>${previousPokemonId} - ${previousPokemon.name}</span>
+                                            <img src="${pokemonSpriteBaseUrl}${previousPokemonId}.png" alt="Sprite de ${previousPokemon.name}">
+                                        </a>`;
+        }
+
     }
 }
