@@ -169,6 +169,16 @@ main {
           color: $text_color;
         }
       }
+
+      &__image {
+        vertical-align: middle;
+        width: 30%;
+      }
+
+      &__name {
+        text-transform: uppercase;
+        vertical-align: middle;
+      }
     }
   }
 }

@@ -112,8 +112,8 @@ function drawPokemonInfo(pokemon) {
             let nextPokemon = JSON.parse(localStorage.getItem(nextPokemonId));
             let nextMenuItem = document.getElementById('next_pokemon');
             nextMenuItem.innerHTML = `<a class="nav_menu__list__item__link" href="./pokemon.html?id=${nextPokemonId}">
-                                            <span>${nextPokemonId} - ${nextPokemon.name}</span>
-                                            <img src="${pokemonSpriteBaseUrl}${nextPokemonId}.png" alt="Sprite de ${nextPokemon.name}">
+                                            <span class="nav_menu__list__item__name">${nextPokemonId} - ${nextPokemon.name}</span>
+                                            <img class="nav_menu__list__item__image" src="${pokemonSpriteBaseUrl}${nextPokemonId}.png" alt="Sprite de ${nextPokemon.name}">
                                         </a>`;
         }
 
@@ -121,8 +121,8 @@ function drawPokemonInfo(pokemon) {
             let previousPokemon = JSON.parse(localStorage.getItem(previousPokemonId));
             let previousMenuItem = document.getElementById('previous_pokemon');
             previousMenuItem.innerHTML = `<a class="nav_menu__list__item__link" href="./pokemon.html?id=${previousPokemonId}">
-                                            <span>${previousPokemonId} - ${previousPokemon.name}</span>
-                                            <img src="${pokemonSpriteBaseUrl}${previousPokemonId}.png" alt="Sprite de ${previousPokemon.name}">
+                                            <span  class="nav_menu__list__item__name">${previousPokemonId} - ${previousPokemon.name}</span>
+                                            <img class="nav_menu__list__item__image" src="${pokemonSpriteBaseUrl}${previousPokemonId}.png" alt="Sprite de ${previousPokemon.name}">
                                         </a>`;
         }
 
