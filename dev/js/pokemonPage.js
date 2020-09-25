@@ -7,18 +7,20 @@ function load() {
     getPokemonInfo();
 }
 
-function getPokemonInfo() {
+async function getPokemonInfo() {
     let pokemonId = getParamId();
     let pokemon = localStorage.getItem(pokemonId);
 
     if (pokemon !== null) {
         pokemon = JSON.parse(pokemon);
         if (!pokemon.hasInfoFromApi) {
-            pokemon = fetchInfoPokemon(pokemon.id);
+            pokemon = await fetchInfoPokemon(pokemon.id);
+            console.log(pokemon);
         }
         drawPokemonInfo(pokemon);
     } else {
-        pokemon = fetchInfoPokemon(pokemonId);
+        pokemon = await fetchInfoPokemon(pokemonId);
+        console.log(pokemon);
         drawPokemonInfo(pokemon);
     }
 }
@@ -39,7 +41,7 @@ async function fetchInfoPokemon(pokemonId) {
             pokemon.types.push(pokemonType.type.name);
         });
         if (pokemonSpeciesData.flavor_text_entries.length > 0) {
-            pokemon.description = pokemonSpeciesData.flavor_text_entries[0].flavor_text;
+            pokemon.description = pokemonSpeciesData.flavor_text_entries[0].flavor_text.split('');
             localStorage.setItem(pokemon.id, JSON.stringify(pokemon));
         }
         pokemon.hasInfoFromApi = true;
@@ -50,26 +52,6 @@ async function fetchInfoPokemon(pokemonId) {
         return localStorage.getItem(pokemonId);
         console.log(error);
     }
-    /*fetch(urlPokemon)
-        .then(response => response.json())
-        .then(response => {
-            pokemon = new Pokemon(response.name, urlPokemon, response.id);
-            response.types.forEach(pokemonType => {
-                pokemon.types.push(pokemonType.type.name);
-            });
-            pokemon.hasInfoFromApi = true;
-            localStorage.setItem(pokemon.id, JSON.stringify(pokemon));
-            return fetch(response.species.url);
-        }).then(response => response.json())
-        .then(response => {
-            pokemon.hasInfoFromApi = true;
-            if (response.flavor_text_entries.length > 0) {
-                pokemon.description = response.flavor_text_entries[0].flavor_text;
-                localStorage.setItem(pokemon.id, JSON.stringify(pokemon));
-            }
-        }).catch(error => {
-            console.log(error);
-        }); */
 }
 
 function getParamId() {
@@ -112,7 +94,8 @@ function drawPokemonInfo(pokemon) {
         if (pokemon.types.length > 0) {
             bgtype = `bgtype_${pokemon.types[0]}`;
         }
-        let typesSpan = pokemon.types.map(pokemonType => `<span class="pokemon_container__type">${pokemonType}</span>`);
+        let typesSpan = pokemon.types.map(pokemonType => `<span class="pokemon_container__type bgtype_${pokemonType}">${pokemonType}</span>`);
+        typesSpan = typesSpan.join('');
 
         pokemon_container.innerHTML = `<figure id="pokemon_container__image_container" class="${bgtype}">
                                             <img src="${pokemonImageBaseUrl}${pokemon.id}.png" alt="Imagen de ${pokemon.name}" id="pokemon_container__image">
@@ -120,7 +103,7 @@ function drawPokemonInfo(pokemon) {
                                         <section id="pokemon_container__data">
                                             <h3 id="pokemon_container__name">${pokemon.name}</h3>
                                             <p>${typesSpan}</p>
-                                            <p>${pokemon.description}</p>
+                                            <p id="pokemon_container__description">${pokemon.description}</p>
                                         </section>`;
     }
 }
