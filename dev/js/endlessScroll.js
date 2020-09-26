@@ -42,10 +42,10 @@
         }
     }
 
-    let listen = function () {
+    let listen = function (event) {
         let height = document.documentElement.scrollHeight;
         let offset = document.documentElement.scrollTop + window.innerHeight;
-
+        console.log({ offset, height, hasMore, getMore, event })
         if (offset === height && hasMore && getMore) {
             load();
         }
