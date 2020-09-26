@@ -277,8 +277,12 @@
     let getDescription = function (flavorTextEntries = []) {
         let description = '';
 
-        if (flavorTextEntries.length > 0) {
-            description = flavorTextEntries[0].flavor_text.toString();
+        flavorTextEntriesFiltered = flavorTextEntries.filter(textEntry => {
+            return textEntry.language.name === 'en';
+        })
+
+        if (flavorTextEntriesFiltered.length > 0) {
+            description = flavorTextEntriesFiltered[0].flavor_text.toString();
         }
 
         return description;
