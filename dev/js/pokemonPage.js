@@ -2,7 +2,8 @@ const apiBaseUrl = 'https://pokeapi.co/api/v2/pokemon/';
 const pokemonImageBaseUrl = 'https://pokeres.bastionbot.org/images/pokemon/';
 const pokemonSpriteBaseUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
 
-window.onload = load;
+// window.onload = load;
+window.addEventListener('load', load);
 
 function load() {
     getPokemonInfo();
@@ -44,6 +45,15 @@ async function fetchInfoPokemon(pokemonId) {
         if (pokemonSpeciesData.flavor_text_entries.length > 0) {
             pokemon.description = pokemonSpeciesData.flavor_text_entries[0].flavor_text.split('');
             localStorage.setItem(pokemon.id, JSON.stringify(pokemon));
+        }
+        if (pokemonSpeciesData.genera.length > 0) {
+            let generaFiltered = pokemon.genera.filter(genus => {
+                return genus.language.name === 'en';
+            })
+            pokemon.genera = '';
+            if (generaFiltered.length > 0) {
+                pokemon.genera = generaFiltered.genus;
+            }
         }
         pokemon.hasInfoFromApi = true;
         localStorage.setItem(pokemon.id, JSON.stringify(pokemon));
