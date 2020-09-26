@@ -111,18 +111,18 @@ main {
   }
 }
 
+@each $type, $color in $pokemon_types_colors {
+  .pokemon_container__image_container--#{$type} {
+    background-color: $color;
+  }
+}
+
 #pokemon_container {
   &__image_container {
     text-align: center;
     margin: 0;
     padding: 5px 0;
     height: 55vh;
-
-    @each $type, $color in $pokemon_types_colors {
-      &.bgtype_#{$type} {
-        background-color: $color;
-      }
-    }
   }
 
   &__image {
@@ -158,12 +158,30 @@ main {
 
     &__item {
       display: inline-block;
-      font-size: 20px;
+      font-size: 16px;
       line-height: 2.5;
+      width: 30%;
+      text-align: center;
+
+      &#next_pokemon {
+        text-align: right;
+      }
+
+      &#previous_pokemon {
+        text-align: left;
+      }
+
+      &__no_mobile {
+        display: none;
+      }
 
       a {
         text-decoration: none;
         color: $text_color;
+
+        &.go_back {
+          text-decoration: underline;
+        }
 
         &:visited,
         &:hover,
@@ -188,21 +206,43 @@ main {
 .pokemon_container__type {
   text-transform: uppercase;
   margin-right: 10px;
+  margin-left: 15px;
   padding: 10px;
   border-radius: 20%;
   border: 1px solid $border_color;
 
   @each $type, $color in $pokemon_types_colors {
-    &.bgtype_#{$type} {
+    &--#{$type} {
       background-color: $color;
     }
   }
 }
 
 @media only screen and (min-device-width: 768px) {
+  main {
+    align-items: center;
+  }
+
+  .nav_menu {
+    width: 70%;
+
+    &__list__item {
+      font-size: 20px;
+
+      &__no_mobile {
+        display: inline;
+      }
+    }
+  }
+
   #pokemon_container {
+    width: 75%;
+
     &__image_container {
       height: 40vh;
+      justify-content: center;
+      align-items: center;
+      display: flex;
     }
 
     &__image {
@@ -211,6 +251,10 @@ main {
 
     &__data {
       height: 38vh;
+    }
+
+    &__genera {
+      font-size: 20px;
     }
 
     &__description {

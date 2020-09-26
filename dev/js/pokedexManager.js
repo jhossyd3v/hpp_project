@@ -3,23 +3,26 @@
     const pokemonImageUrl = 'https://pokeres.bastionbot.org/images/pokemon/';
     const pokemonSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
 
-    let lastPokemonGotFromStorage = {};
-    let lastPokemonSavedInStorage = {};
-    let lastPokemonCreated = {};
+    let lastGotFromStoragePokemon = {};
+    let lastSavedInStoragePokemon = {};
+    let lastCreatedPokemon = {};
+    let selectedPokemon = {};
     let pokemons = [];
-    let lastPokemonsGotFromStorage = [];
+    let lastGotFromStoragePokemons = [];
+    let previousPokemon = {};
+    let nextPokemon = {};
 
-    let pokemonCreated = function (name, url, id = -1) {
-        lastPokemonCreated = {};
+    let wasPokemonCreated = function (name, url, id = -1) {
+        lastCreatedPokemon = {};
         createPokemon(name, url, id);
-        return lastPokemonCreated.hasOwnProperty('id');
+        return lastCreatedPokemon.hasOwnProperty('id');
     }
     let createPokemon = function (name, url, id = -1) {
         if (id === -1) {
             id = getIdFromUrl(url);
         }
 
-        lastPokemonCreated = {
+        lastCreatedPokemon = {
             id,
             name,
             url,
@@ -42,33 +45,33 @@
     }
 
     let existPokemonInStorage = function (pokemonId = 1) {
-        lastPokemonGotFromStorage = {};
+        lastGotFromStoragePokemon = {};
         getPokemonInStorage(pokemonId);
-        return lastPokemonGotFromStorage.hasOwnProperty('id') && pokemonId === lastPokemonGotFromStorage.id;
+        return lastGotFromStoragePokemon.hasOwnProperty('id') && pokemonId === lastGotFromStoragePokemon.id;
     }
 
     let getPokemonInStorage = function (pokemonId = 1) {
         let stringId = getStringPokemonId(pokemonId);
         let pokemon = localStorage.getItem(stringId);
         if (pokemon === null) {
-            lastPokemonGotFromStorage = {};
+            lastGotFromStoragePokemon = {};
         } else {
-            lastPokemonGotFromStorage = JSON.parse(pokemon);
+            lastGotFromStoragePokemon = JSON.parse(pokemon);
         }
     }
 
     let wasSavedPokemonInStorage = function (pokemon = {}) {
-        lastPokemonSavedInStorage = {};
+        lastSavedInStoragePokemon = {};
         setPokemonInStorage(pokemon);
-        return lastPokemonSavedInStorage.hasOwnProperty('id') && pokemon.id === lastPokemonSavedInStorage.id;
+        return lastSavedInStoragePokemon.hasOwnProperty('id') && pokemon.id === lastSavedInStoragePokemon.id;
     }
 
     let setPokemonInStorage = function (pokemon = {}) {
         if (!pokemon.hasOwnProperty('id')) {
-            lastPokemonSavedInStorage = {};
+            lastSavedInStoragePokemon = {};
         } else {
             let stringId = getStringPokemonId(pokemon.id);
-            lastPokemonSavedInStorage = pokemon;
+            lastSavedInStoragePokemon = pokemon;
             localStorage.setItem(stringId, JSON.stringify(pokemon));
         }
     }
@@ -79,7 +82,7 @@
                 result: false
             }
             pokemons = [];
-            lastPokemonsGotFromStorage = [];
+            lastGotFromStoragePokemons = [];
 
             if (start > 150) {
                 resolve(myResponse);
@@ -89,7 +92,7 @@
                 }
 
                 if (existRangeOfPokemonsInStorage(start, limit)) {
-                    pokemons = lastPokemonsGotFromStorage;
+                    pokemons = lastGotFromStoragePokemons;
                     addPokemonsOnGrid();
                     myResponse.result = true;
                     resolve(myResponse);
@@ -100,19 +103,15 @@
                             const { results } = response;
 
                             results.forEach(pkmn => {
-                                if (pokemonCreated(pkmn.name, pkmn.url)) {
-                                    if (!existPokemonInStorage(lastPokemonCreated.id)) {
-                                        console.log('No Existe');
-                                        if (wasSavedPokemonInStorage(lastPokemonCreated)) {
-                                            console.log('Guardado');
-                                            pokemons.push(lastPokemonSavedInStorage);
+                                if (wasPokemonCreated(pkmn.name, pkmn.url)) {
+                                    if (!existPokemonInStorage(lastCreatedPokemon.id)) {
+                                        if (wasSavedPokemonInStorage(lastCreatedPokemon)) {
+                                            pokemons.push(lastSavedInStoragePokemon);
                                         } else {
-                                            console.log('Creado');
-                                            pokemons.push(lastPokemonCreated);
+                                            pokemons.push(lastCreatedPokemon);
                                         }
                                     } else {
-                                        console.log('Existe')
-                                        pokemons.push(lastPokemonGotFromStorage);
+                                        pokemons.push(lastGotFromStoragePokemon);
                                     }
                                 }
                             })
@@ -128,9 +127,6 @@
                         })
                 }
             }
-
-
-
         });
     }
 
@@ -144,7 +140,7 @@
         pokemonsContainer.innerHTML = pokemonsContainer.innerHTML + pokemonItems;
     }
 
-    let getPokemonHTMLForGrid = function (pokemon) {
+    let getPokemonHTMLForGrid = function (pokemon = {}) {
         let htmlContent = '';
 
         if (pokemon.hasOwnProperty('id') && pokemon.hasOwnProperty('name')) {
@@ -162,24 +158,221 @@
 
     let existRangeOfPokemonsInStorage = function (start, limit) {
         getListOfPokemonsFromStorage(start, limit);
-        return lastPokemonsGotFromStorage.length === limit;
+        return lastGotFromStoragePokemons.length === limit;
     }
 
     let getListOfPokemonsFromStorage = function (start, limit) {
         let current = start + 1;
         let last = start + limit;
-        lastPokemonsGotFromStorage = [];
+        lastGotFromStoragePokemons = [];
 
         for (; current <= last; current++) {
             if (existPokemonInStorage(current)) {
-                lastPokemonsGotFromStorage.push(lastPokemonGotFromStorage);
+                lastGotFromStoragePokemons.push(lastGotFromStoragePokemon);
             }
+        }
+    }
+
+    let getPokemonInfo = function (pokemonId = 1) {
+        selectedPokemon = {};
+        if (existPokemonInStorage(pokemonId)) {
+            if (lastGotFromStoragePokemon.hasInfoFromApi) {
+                selectedPokemon = lastGotFromStoragePokemon;
+                drawPokemonInfo();
+            } else {
+                fetchPokemonInfo(pokemonId)
+                    .then(response => {
+                        if (response.result) {
+                            drawPokemonInfo();
+                        }
+                    }).catch(error => { console.log(error) });
+            }
+        } else {
+            fetchPokemonInfo(pokemonId)
+                .then(response => {
+                    if (response.result) {
+                        drawPokemonInfo();
+                    }
+                }).catch(error => { console.log(error) });
+        }
+    }
+
+    let fetchPokemonInfo = function (pokemonId = 1) {
+        return new Promise((resolve, reject) => {
+            let myResponse = { result: false };
+            let pokemonUrl = `${apiUrl}${pokemonId}`;
+
+            fetch(pokemonUrl)
+                .then(response => response.json())
+                .then(response => {
+                    const { name, types, species } = response;
+                    if (wasPokemonCreated(name, pokemonUrl, pokemonId)) {
+                        lastCreatedPokemon.types = getTypesArray(types);
+                        lastCreatedPokemon.hasInfoFromApi = true;
+                        if (wasSavedPokemonInStorage(lastCreatedPokemon)) {
+                            selectedPokemon = lastSavedInStoragePokemon;
+                            myResponse.result = true;
+                        } else {
+                            selectedPokemon = lastCreatedPokemon;
+                            myResponse.result = true;
+                        }
+                        return fetch(species.url);
+                    } else {
+                        throw new Error("Pokemon couldn't be created")
+                    }
+                }).then(response => response.json())
+                .then(response => {
+                    const { flavor_text_entries, genera } = response;
+
+                    selectedPokemon.description = getDescription(flavor_text_entries);
+                    selectedPokemon.genera = getGenera(genera);
+                    if (wasSavedPokemonInStorage(selectedPokemon)) {
+                        myResponse.result = true;
+                    }
+                    resolve(myResponse);
+                }).catch(error => {
+                    reject(error);
+                })
+        });
+    }
+
+    let getTypesArray = function (types = []) {
+        let typesArray = [];
+
+        types.forEach(type => {
+            typesArray.push(type.type.name);
+        })
+
+        return typesArray;
+    }
+
+    let getDescription = function (flavorTextEntries = []) {
+        let description = '';
+
+        if (flavorTextEntries.length > 0) {
+            description = flavorTextEntries[0].flavor_text.toString();
+        }
+
+        return description;
+    }
+
+    let getGenera = function (generas = []) {
+        let genera = '';
+
+        let generaFiltered = generas.filter(genus => {
+            return genus.language.name === 'en';
+        })
+
+        if (generaFiltered.length > 0) {
+            genera = generaFiltered[0].genus;
+        }
+
+        return genera;
+    }
+
+    let drawPokemonInfo = function () {
+        let pokemonContainer = document.getElementById('pokemon_container');
+        let previousMenuItem = document.getElementById('previous_pokemon');
+        let nextMenuItem = document.getElementById('next_pokemon');
+
+        pokemonContainer.innerHTML = getPokemonHTML();
+
+        if (existPreviousPokemon(selectedPokemon.id)) {
+            previousMenuItem.innerHTML = getNavigationPokemonHTML(previousPokemon, true);
+        }
+
+        if (existNextPokemon(selectedPokemon.id)) {
+            nextMenuItem.innerHTML = getNavigationPokemonHTML(nextPokemon, false);
+        }
+    }
+
+    let getPokemonHTML = function () {
+        let htmlContent = '';
+        let mainType = '';
+        let typesSpan = '';
+
+        if (selectedPokemon.hasOwnProperty('id')) {
+            const { types, name, id, description, genera } = selectedPokemon;
+            if (types.length > 0) {
+                mainType = types[0];
+            }
+
+            typesSpan = types.map(type => `<span class="pokemon_container__type pokemon_container__type--${type}">${type}</span>`);
+            typesSpan = typesSpan.join('');
+
+            htmlContent = `<figure id="pokemon_container__image_container" class="pokemon_container__image_container--${mainType}">
+                                <img src="${pokemonImageUrl}${id}.png" alt="Imagen de ${name}" id="pokemon_container__image">
+                            </figure>
+                            <section id="pokemon_container__data">
+                                <p><span id="pokemon_container__name">${id} - ${name}</span>${typesSpan}</p>
+                                <p id="pokemon_container__genera">${genera}</p>
+                                <p id="pokemon_container__description">${description}</p>
+                            </section>`;
+        }
+
+        return htmlContent;
+    }
+
+    let getNavigationPokemonHTML = function (pokemon = {}, previous = true) {
+        let htmlContent = '';
+        let arrow = '< ';
+
+
+        if (pokemon.hasOwnProperty('id')) {
+            if (!previous) {
+                arrow = ' >'
+                htmlContent = `<a class="nav_menu__list__item__link" href="./pokemon.html?id=${pokemon.id}">
+                                <img class="nav_menu__list__item__image" src="${pokemonSpriteUrl}${pokemon.id}.png" alt="Sprite de ${pokemon.name}">
+                                <span class="nav_menu__list__item__name">${pokemon.id}<span class="nav_menu__list__item__no_mobile">${pokemon.name}</span>${arrow}</span>
+                            </a>`;
+            } else {
+                htmlContent = `<a class="nav_menu__list__item__link" href="./pokemon.html?id=${pokemon.id}">
+                                <span class="nav_menu__list__item__name">${arrow}${pokemon.id}<span class="nav_menu__list__item__no_mobile">${pokemon.name}</span></span>
+                                <img class="nav_menu__list__item__image" src="${pokemonSpriteUrl}${pokemon.id}.png" alt="Sprite de ${pokemon.name}">
+                            </a>`;
+            }
+        }
+
+        return htmlContent;
+
+    }
+
+    let existPreviousPokemon = function (pokemonId) {
+        previousPokemon = {};
+        let previousPokemonId = pokemonId - 1;
+        if (previousPokemonId >= 1) {
+            getPreviousPokemon(previousPokemonId);
+        }
+
+        return previousPokemon.hasOwnProperty('id');
+    }
+
+    let getPreviousPokemon = function (pokemonId = 1) {
+        if (existPokemonInStorage(pokemonId)) {
+            previousPokemon = lastGotFromStoragePokemon;
+        }
+    }
+
+    let existNextPokemon = function (pokemonId) {
+        nextPokemon = {};
+        let nextPokemonId = pokemonId + 1;
+        if (nextPokemonId <= 150) {
+            getNextPokemon(nextPokemonId);
+        }
+
+        return nextPokemon.hasOwnProperty('id');
+    }
+
+    let getNextPokemon = function (pokemonId = 1) {
+        if (existPokemonInStorage(pokemonId)) {
+            nextPokemon = lastGotFromStoragePokemon;
         }
     }
 
     if (!window.hasOwnProperty('pokedex')) {
         window.pokedex = {
-            getListOfPokemons
+            getListOfPokemons,
+            getPokemonInfo
         };
     }
 })()

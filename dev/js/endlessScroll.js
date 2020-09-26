@@ -15,7 +15,6 @@
     let beforeGetNextPage = function () { }
 
     let load = function () {
-        console.log('A')
         if (getMore && hasMore) {
             let start = 0;
             let stepsToUse = steps;
@@ -26,7 +25,7 @@
             if (currentPage === 0) {
                 stepsToUse = initialSteps;
             }
-            console.log({ start, currentPage, stepsToUse, steps, initialSteps });
+
             getNextPage(start, stepsToUse)
                 .then(response => {
                     if (response.result) {
@@ -46,10 +45,7 @@
     let listen = function (event) {
         let height = document.documentElement.scrollHeight;
         let offset = Math.ceil(document.documentElement.scrollTop + window.innerHeight);
-        console.log(document.documentElement.scrollHeight)
-        console.log(document.documentElement.scrollTop)
-        console.log(window.innerHeight)
-        console.log({ offset, height, hasMore, getMore, event })
+
         if (offset >= height && hasMore && getMore) {
             load();
         }

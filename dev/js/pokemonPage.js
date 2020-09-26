@@ -1,15 +1,27 @@
-const apiBaseUrl = 'https://pokeapi.co/api/v2/pokemon/';
-const pokemonImageBaseUrl = 'https://pokeres.bastionbot.org/images/pokemon/';
-const pokemonSpriteBaseUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
-
-// window.onload = load;
 window.addEventListener('load', load);
 
 function load() {
-    getPokemonInfo();
+    let pokemonId = getParamId();
+    pokedex.getPokemonInfo(pokemonId);
+    // getPokemonInfo();
 }
+function getParamId() {
+    let getParams = location.search.substr(1).split('&');
+    let pokemonId = 1;
 
-async function getPokemonInfo() {
+    getParams.forEach(getParam => {
+        let param = getParam.split('=');
+        if (param[0] === 'id') {
+            let temporalId = parseInt(param[1]);
+            if (!isNaN(temporalId)) {
+                pokemonId = temporalId;
+            }
+        }
+    })
+
+    return pokemonId;
+}
+/* async function getPokemonInfo() {
     let pokemonId = getParamId();
     let pokemon = localStorage.getItem(pokemonId);
 
@@ -65,22 +77,7 @@ async function fetchInfoPokemon(pokemonId) {
     }
 }
 
-function getParamId() {
-    let getParams = location.search.substr(1).split('&');
-    let pokemonId = 1;
 
-    getParams.forEach(getParam => {
-        let param = getParam.split('=');
-        if (param[0] === 'id') {
-            let temporalId = parseInt(param[1]);
-            if (!isNaN(temporalId)) {
-                pokemonId = temporalId;
-            }
-        }
-    })
-
-    return pokemonId;
-}
 
 function Pokemon(name, url, id = -1) {
     this.name = name;
@@ -138,4 +135,4 @@ function drawPokemonInfo(pokemon) {
         }
 
     }
-}
+} */
