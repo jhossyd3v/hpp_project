@@ -10,7 +10,7 @@ function calculateItemsToShow() {
     let pokemonsContainerWidth = document.getElementById('pokemons_container').clientWidth;
     let documentHeight = document.documentElement.offsetHeight;
 
-    let rows = Math.ceil(documentHeight / 142) + 1;
+    let rows = Math.ceil(documentHeight / 142) + 3;
     let columns = Math.floor(pokemonsContainerWidth / 172);
     let totalItemsToShow = columns * rows;
     let totalItemsToGet = columns * 3;

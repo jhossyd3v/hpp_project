@@ -22,7 +22,7 @@ async function getPokemonInfo() {
         drawPokemonInfo(pokemon);
     } else {
         pokemon = await fetchInfoPokemon(pokemonId);
-        console.log(pokemon);
+        console.log({ pokemon });
         drawPokemonInfo(pokemon);
     }
 }
@@ -47,7 +47,7 @@ async function fetchInfoPokemon(pokemonId) {
             localStorage.setItem(pokemon.id, JSON.stringify(pokemon));
         }
         if (pokemonSpeciesData.genera.length > 0) {
-            let generaFiltered = pokemon.genera.filter(genus => {
+            let generaFiltered = pokemonSpeciesData.genera.filter(genus => {
                 return genus.language.name === 'en';
             })
             pokemon.genera = '';
@@ -60,8 +60,8 @@ async function fetchInfoPokemon(pokemonId) {
 
         return pokemon;
     } catch (error) {
-        return localStorage.getItem(pokemonId);
         console.log(error);
+        return localStorage.getItem(pokemonId);
     }
 }
 
@@ -100,6 +100,7 @@ function Pokemon(name, url, id = -1) {
 
 function drawPokemonInfo(pokemon) {
     if (pokemon.hasOwnProperty('id')) {
+        console.log('A')
         let pokemonContainer = document.getElementById('pokemon_container');
         let bgtype = '';
         if (pokemon.types.length > 0) {
@@ -108,7 +109,7 @@ function drawPokemonInfo(pokemon) {
         let typesSpan = pokemon.types.map(pokemonType => `<span class="pokemon_container__type bgtype_${pokemonType}">${pokemonType}</span>`);
         typesSpan = typesSpan.join('');
 
-        pokemon_container.innerHTML = `<figure id="pokemon_container__image_container" class="${bgtype}">
+        pokemonContainer.innerHTML = `<figure id="pokemon_container__image_container" class="${bgtype}">
                                             <img src="${pokemonImageBaseUrl}${pokemon.id}.png" alt="Imagen de ${pokemon.name}" id="pokemon_container__image">
                                         </figure>
                                         <section id="pokemon_container__data">

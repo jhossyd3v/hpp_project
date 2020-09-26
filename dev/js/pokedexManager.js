@@ -84,7 +84,7 @@
             if (start > 150) {
                 resolve(myResponse);
             } else {
-                if (limit > 150) {
+                if ((start + limit) > 150) {
                     limit = 150 - start;
                 }
 
