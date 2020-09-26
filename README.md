@@ -4,15 +4,15 @@
 
 ### Información
 
-El código fuente se encuentra en la carpeta **dev** de este repositorio, en **js** los scripts y en **sass** los estilos.
-
-En las carpetas **js** y **css** de la raíz se encontrarán archivos minificados.
-
 Este proyecto lo pueden ver funcionando en la URL [https://jhossymar-hppproject.netlify.app/](https://jhossymar-hppproject.netlify.app/)
 
 Como está hecho con HTML, CSS y Vanila Javascript, y la PokeAPI no tiene requerimientos de SSL, lo pueden ejecutar también clonando el repo y dando doble click al archivo `index.html` en la raíz.
 
 Al ingresar a la página principal les cargará cierta cantidad de pokemons según el tamaño de la pantalla del dispositivo y conforme hagan scroll les irán cargando los pokemons restantes hasta llegar al 150.
+
+El código fuente se encuentra en la carpeta **dev** de este repositorio, en **js** los scripts y en **sass** los estilos.
+
+En las carpetas **js** y **css** de la raíz se encontrarán archivos minificados.
 
 Tareas
 
