@@ -44,7 +44,10 @@
 
     let listen = function (event) {
         let height = document.documentElement.scrollHeight;
-        let offset = document.documentElement.scrollTop + window.innerHeight;
+        let offset = Math.ceil(document.documentElement.scrollTop + window.innerHeight);
+        console.log(document.documentElement.scrollHeight)
+        console.log(document.documentElement.scrollTop)
+        console.log(window.innerHeight)
         console.log({ offset, height, hasMore, getMore, event })
         if (offset === height && hasMore && getMore) {
             load();
