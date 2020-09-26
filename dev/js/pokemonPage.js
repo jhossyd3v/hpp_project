@@ -6,6 +6,7 @@ function load() {
 }
 function getParamId() {
     let getParams = location.search.substr(1).split('&');
+    let hasIdParam = false;
     let pokemonId = 1;
 
     getParams.forEach(getParam => {
@@ -14,9 +15,14 @@ function getParamId() {
             let temporalId = parseInt(param[1]);
             if (!isNaN(temporalId)) {
                 pokemonId = temporalId;
+                hasIdParam = true;
             }
         }
     })
+
+    if (!hasIdParam) {
+        pokemonId = Math.ceil(Math.random() * 150);
+    }
 
     return pokemonId;
 }
