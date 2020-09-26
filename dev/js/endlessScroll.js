@@ -46,7 +46,7 @@
         let height = document.documentElement.scrollHeight;
         let offset = Math.ceil(document.documentElement.scrollTop + window.innerHeight);
 
-        if (offset >= height && hasMore && getMore) {
+        if ((offset >= height) && hasMore && getMore) {
             load();
         }
     }
@@ -58,10 +58,8 @@
     }
 
     let init = function () {
-        window.addEventListener('scroll', listen);
-        // let mainElement = document.getElementsByTagName('main')[0];
-        // mainElement.addEventListener('touchmove', listen);
         document.addEventListener('touchmove', listen);
+        window.addEventListener('scroll', listen);
         getMore = true;
         hasMore = true;
         load();

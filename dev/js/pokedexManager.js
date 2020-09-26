@@ -76,7 +76,7 @@
         }
     }
 
-    let getListOfPokemons = function (start, limit) {
+    let getListOfPokemons = function (start, limit, toDraw = true) {
         return new Promise((resolve, reject) => {
             let myResponse = {
                 result: false
@@ -93,7 +93,9 @@
 
                 if (existRangeOfPokemonsInStorage(start, limit)) {
                     pokemons = lastGotFromStoragePokemons;
-                    addPokemonsOnGrid();
+                    if (toDraw) {
+                        addPokemonsOnGrid();
+                    }
                     myResponse.result = true;
                     resolve(myResponse);
                 } else {
@@ -119,7 +121,9 @@
                             if (pokemons.length > 0) {
                                 myResponse.result = true;
                             }
-                            addPokemonsOnGrid();
+                            if (toDraw) {
+                                addPokemonsOnGrid();
+                            }
 
                             resolve(myResponse);
                         }).catch(error => {
@@ -175,26 +179,50 @@
 
     let getPokemonInfo = function (pokemonId = 1) {
         selectedPokemon = {};
-        if (existPokemonInStorage(pokemonId)) {
-            if (lastGotFromStoragePokemon.hasInfoFromApi) {
-                selectedPokemon = lastGotFromStoragePokemon;
-                drawPokemonInfo();
-            } else {
-                fetchPokemonInfo(pokemonId)
-                    .then(response => {
-                        if (response.result) {
-                            drawPokemonInfo();
-                        }
-                    }).catch(error => { console.log(error) });
-            }
-        } else {
-            fetchPokemonInfo(pokemonId)
-                .then(response => {
-                    if (response.result) {
-                        drawPokemonInfo();
-                    }
-                }).catch(error => { console.log(error) });
+
+        if (pokemonId > 150) {
+            pokemonId = 150;
+        } else if (pokemonId < 1) {
+            pokemonId = 1;
         }
+
+        let start = pokemonId - 1;
+
+        if (start < 1) {
+            start = 1
+        }
+
+
+        getListOfPokemons(start, 3, false)
+            .then(response => {
+                if (response.result) {
+                    if (existPokemonInStorage(pokemonId)) {
+                        if (lastGotFromStoragePokemon.hasInfoFromApi) {
+                            selectedPokemon = lastGotFromStoragePokemon;
+                            drawPokemonInfo();
+                        } else {
+                            fetchPokemonInfo(pokemonId)
+                                .then(response => {
+                                    if (response.result) {
+                                        drawPokemonInfo();
+                                    }
+                                }).catch(error => { console.log(error) });
+                        }
+                    } else {
+                        if (response.result) {
+                            fetchPokemonInfo(pokemonId)
+                                .then(response => {
+                                    if (response.result) {
+                                        drawPokemonInfo();
+                                    }
+                                }).catch(error => { console.log(error) });
+                        }
+                    }
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            })
     }
 
     let fetchPokemonInfo = function (pokemonId = 1) {
@@ -323,11 +351,11 @@
                 arrow = ' >'
                 htmlContent = `<a class="nav_menu__list__item__link" href="./pokemon.html?id=${pokemon.id}">
                                 <img class="nav_menu__list__item__image" src="${pokemonSpriteUrl}${pokemon.id}.png" alt="Sprite de ${pokemon.name}">
-                                <span class="nav_menu__list__item__name">${pokemon.id}<span class="nav_menu__list__item__no_mobile">${pokemon.name}</span>${arrow}</span>
+                                <span class="nav_menu__list__item__name">${pokemon.id}<span class="nav_menu__list__item__no_mobile"> - ${pokemon.name}</span>${arrow}</span>
                             </a>`;
             } else {
                 htmlContent = `<a class="nav_menu__list__item__link" href="./pokemon.html?id=${pokemon.id}">
-                                <span class="nav_menu__list__item__name">${arrow}${pokemon.id}<span class="nav_menu__list__item__no_mobile">${pokemon.name}</span></span>
+                                <span class="nav_menu__list__item__name">${arrow}${pokemon.id}<span class="nav_menu__list__item__no_mobile"> - ${pokemon.name}</span></span>
                                 <img class="nav_menu__list__item__image" src="${pokemonSpriteUrl}${pokemon.id}.png" alt="Sprite de ${pokemon.name}">
                             </a>`;
             }
