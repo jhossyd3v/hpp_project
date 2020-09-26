@@ -15,6 +15,7 @@
     let beforeGetNextPage = function () { }
 
     let load = function () {
+        console.log('A')
         if (getMore && hasMore) {
             let start = 0;
             let stepsToUse = steps;
