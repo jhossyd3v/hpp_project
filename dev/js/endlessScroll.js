@@ -49,7 +49,7 @@
         console.log(document.documentElement.scrollTop)
         console.log(window.innerHeight)
         console.log({ offset, height, hasMore, getMore, event })
-        if (offset === height && hasMore && getMore) {
+        if (offset >= height && hasMore && getMore) {
             load();
         }
     }
