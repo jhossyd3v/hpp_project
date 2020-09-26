@@ -59,8 +59,9 @@
 
     let init = function () {
         window.addEventListener('scroll', listen);
-        let mainElement = document.getElementsByTagName('main')[0];
-        mainElement.addEventListener('ontouchmove', listen);
+        // let mainElement = document.getElementsByTagName('main')[0];
+        // mainElement.addEventListener('touchmove', listen);
+        document.addEventListener('touchmove', listen);
         getMore = true;
         hasMore = true;
         load();
