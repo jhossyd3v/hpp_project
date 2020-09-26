@@ -186,7 +186,7 @@
             pokemonId = 1;
         }
 
-        let start = pokemonId - 1;
+        let start = pokemonId - 2;
 
         if (start < 1) {
             start = 1
