@@ -1,4 +1,3 @@
-// window.onload = load;
 window.addEventListener('load', load);
 
 function load() {

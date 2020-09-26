@@ -334,7 +334,6 @@
         }
 
         return htmlContent;
-
     }
 
     let existPreviousPokemon = function (pokemonId) {
