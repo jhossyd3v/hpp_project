@@ -1,6 +1,6 @@
 (function pokedex() {
     const apiUrl = 'https://pokeapi.co/api/v2/pokemon/';
-    const pokemonImageUrl = 'https://pokeres.bastionbot.org/images/pokemon/';
+    const pokemonImageUrl = 'https://unpkg.com/pokeapi-sprites@2.0.2/sprites/pokemon/other/dream-world/';
     const pokemonSpriteUrl = 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/';
 
     let lastGotFromStoragePokemon = {};
@@ -153,7 +153,7 @@
                                     <span class="pokemon_item__header__id">${pokemon.id}</span>
                                     <span class="pokemon_item__header__name">${pokemon.name}</span>
                                 </header>
-                                <img src="${pokemonImageUrl}${pokemon.id}.png" alt="Imagen de ${pokemon.name}" class="pokemon_item__image"></img>
+                                <img src="${pokemonImageUrl}${pokemon.id}.svg" alt="Imagen de ${pokemon.name}" class="pokemon_item__image"></img>
                             </a>`;
         }
 
@@ -333,7 +333,7 @@
             typesSpan = typesSpan.join('');
 
             htmlContent = `<figure id="pokemon_container__image_container" class="pokemon_container__image_container--${mainType}">
-                                <img src="${pokemonImageUrl}${id}.png" alt="Imagen de ${name}" id="pokemon_container__image">
+                                <img src="${pokemonImageUrl}${id}.svg" alt="Imagen de ${name}" id="pokemon_container__image">
                             </figure>
                             <section id="pokemon_container__data">
                                 <p><span id="pokemon_container__name">${id} - ${name}</span>${typesSpan}</p>
